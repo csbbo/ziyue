@@ -1,0 +1,97 @@
+@import './color.less';
+#Profile {
+  .profile-nav {
+    height: 60px;
+    border-bottom: 1px solid #bdbdbd;
+    .profile-nav-center {
+      margin: auto;
+      width: 1000px;
+      padding-top: 10px;
+      display: flex;
+      .profile-space {
+        height: 20px;
+        width: 30%;
+      }
+      .profile-small-nav {
+        width: 70%;
+        .profile-nav-menu {
+          background-color: @bg-grey;
+          li {
+            a {
+              color: #424242;
+            }
+          }
+        }
+      }
+    }
+  }
+  .profile-divider {
+    display: flex;
+    margin: auto;
+    width: 1000px;
+    .profile-left {
+      width: 30%;
+      img {
+        width: 80%;
+        margin-top: -30px;
+        border: 1px solid #bdbdbd;
+      }
+      .profile-info {
+        width: 80%;
+        padding-right: 5px;
+        .profile-name {
+          font-size: 21px;
+          padding-bottom: 10px;
+        }
+        .profile-remark {
+          word-break: break-all;
+        }
+        .divider {
+          margin: 20px 0;
+        }
+        .profile-phone {
+          display: flex;
+          margin-bottom: 5px;
+          span {
+            font-size: 16px;
+            margin-left: 10px;
+          }
+        }
+        .profile-email {
+          display: flex;
+          margin-bottom: 5px;
+          span {
+            font-size: 16px;
+            margin-left: 10px;
+          }
+        }
+        .profile-time {
+          .time-word {
+            font-size: 16px;
+            font-weight: bold;
+          }
+          .time-time {
+            font-size: 16px;
+            margin-left: 10px;
+          }
+        }
+        .btn {
+          width: 100%;
+          margin-top: 15px;
+          height: 35px;
+          box-shadow: none;
+          background-color: #e0e0e0;
+          color: #424242;
+          transition: background-color 1.5s;
+        }
+        .btn:hover {
+          background-color: #757575;
+        }
+      }
+    }
+    .profile-right {
+      width: 70%;
+      //border: 1px solid black;
+    }
+  }
+}

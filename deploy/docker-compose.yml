@@ -1,0 +1,75 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: zy_mysql
+    restart: always
+    command: [
+      '--character-set-server=utf8mb4', # 设置utf-8字符集
+      '--collation-server=utf8mb4_general_ci',  # 设置utf-8字符集
+      '--lower_case_table_names=1', # 数据库不区分大小写
+      '--default-authentication-plugin=mysql_native_password',  # mysql8密码存储方式保留为传统普通密码方式
+    ]
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: ziyue  # 设置root用户密码
+      MYSQL_DATABASE: ziyue # 创建数据库
+    volumes:
+      - "./data/mysql:/var/lib/mysql"
+      # - "./data/my.cnf:/etc/my.cnf"
+  redis:
+    image: redis:6.0-alpine
+    container_name: zy_redis
+    restart: always
+    volumes:
+      - "./data/redis:/data"
+  mongo:
+    image: mongo:4.2.9
+    container_name: zy_mongo
+    restart: always
+    volumes:
+      - "./data/mongo:/data/db"
+      # - "./data/mongo-entrypoint:/docker-entrypoint-initdb.d"
+  elasticsearch:
+    image: elasticsearch:7.9.1
+    container_name: zy_elasticsearch
+    restart: always
+    environment:
+      - node.name=odfe-node1
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+    ulimits:
+        memlock:
+            soft: -1
+            hard: -1
+        nofile:
+            soft: 262144 # maximum number of open files for the Elasticsearch user, set to at least 65536 on modern systems
+            hard: 262144
+  server:
+    image: zy_server:latest
+    container_name: zy_server
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+      - mongo
+      - elasticsearch
+    ports:
+      - "9000:9000"
+    # volumes:
+    #   - "./conf:/server/conf"
+    healthcheck:
+      test: "curl -fs http://127.0.0.1:8000/api/csrftoken || exit 1"
+      interval: 60s
+      timeout: 10s
+  nginx:
+    image: nginx:latest
+    container_name: zy_nginx
+    restart: always
+    command: ['nginx', '-g', 'daemon off;']
+    depends_on:
+      - server
+    # ports:
+    #   - "80:80/tcp"
